@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 class BasicConstructs {
   Logger logger = Logger.getAnonymousLogger();
 
+  int[] nums = { 0, 1, 2, 3, 4, 5 };
   char[] chars;
   List<String> list;
   Map<String, String> map;
@@ -57,11 +58,11 @@ class BasicConstructs {
     }
   }
 
-  public void charOperations(){
+  public void charOperations() {
     System.out.println(Character.getNumericValue('a'));
-    System.out.println('z'-'a');
+    System.out.println('z' - 'a');
     StringBuilder sb = new StringBuilder();
-    for(char c : chars) {
+    for (char c : chars) {
       sb.append(c);
     }
     System.out.println(sb.toString());
@@ -73,26 +74,44 @@ class BasicConstructs {
     return head;
   }
 
-  public void iterateList(Node head){
+  public void iterateList(Node head) {
     Node current = head;
-    while(current != null) {
+    while (current != null) {
       System.out.println(current.value);
       current = current.next;
     }
   }
 
-  public void stringSlice(){
+  public void stringSlice() {
     String string = "0123456789";
     System.out.println(string.charAt(0));
     System.out.println(string.substring(1, 5));
   }
 
+  public Node arrayToLinkedList(int[] values) {
+    Node head = null;
+    Node current = null;
+    for (int n : values) {
+      Node newNode = new Node(n);
+      if (current == null) {
+        head = newNode;
+        current = head;
+      } else {
+        current.next = newNode;
+        current = newNode;
+      }
+    }
+    return head;
+  }
+
   public static void main(String[] args) {
     BasicConstructs bc = new BasicConstructs();
-    bc.iterateList();
-    bc.iterateMap();
-    bc.charOperations();
-    bc.iterateList(bc.buildList());
-    bc.stringSlice();
+    // bc.iterateList();
+    // bc.iterateMap();
+    // bc.charOperations();
+    // bc.iterateList(bc.buildList());
+    // bc.stringSlice();
+    Node head = bc.arrayToLinkedList(bc.nums);
+    bc.iterateList(head);
   }
 }
