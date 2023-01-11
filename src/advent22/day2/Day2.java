@@ -36,6 +36,7 @@ public class Day2 {
             'Y', Shape.Paper,
             'Z', Shape.Scissors);
     // Rock defeats Scissors, Scissors defeats Paper, and Paper defeats Rock
+    // TODO this can be derived from neededSelectionToBeat
     static final Set<String> winningShapeCombinations = Set.of(
             getDecisionKey(Shape.Rock, Shape.Scissors),
             getDecisionKey(Shape.Scissors, Shape.Paper),
