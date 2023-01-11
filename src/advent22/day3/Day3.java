@@ -1,17 +1,17 @@
 package day3;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 public class Day3 {
 
     private static final String inputFile = "day3.txt";
 
     public static void main(String args[]) {
+        long startTime = System.nanoTime();
         System.out.println("Total Of The Priorities " + calculateTotalPriority());
         System.out.println("Total group Priority " + calculateTotalGroupPriority());
+        System.out.println("Running Time  " + (System.nanoTime() - startTime) / 1000);
     }
 
     private static int calculateTotalPriority() {
@@ -43,14 +43,20 @@ public class Day3 {
             int currentIndex = lineCounter % 3;
             currentGroup[currentIndex] = rucksack;
             if (currentIndex + 1 == 3) {
-                Character[] commonElementsFirstPair = findCommonElements(currentGroup[0], currentGroup[1]);
-                Character[] commonElements = findCommonElements(String.valueOf(Arrays.stream(commonElementsFirstPair)
-                        .map(Object::toString)
-                        .collect(Collectors.joining())), currentGroup[2]);
-                Character commonElement = commonElements[0];
+                // get common from 1st and second
+                HashSet<Character> commonElementsFirstPair = findCommonElements(currentGroup[0].toCharArray(),
+                        currentGroup[1].toCharArray());
+                // get commons from result and 3rd . O(2n^2) < O(n^3)
+                Character[] commonElementsFirstPairArray = commonElementsFirstPair
+                        .toArray(new Character[commonElementsFirstPair.size()]); // Set to Character
+                char[] charArray = new char[commonElementsFirstPairArray.length]; // Character to char
+                for (int i = 0; i < commonElementsFirstPairArray.length; i++)
+                    charArray[i] = commonElementsFirstPairArray[i];
+                HashSet<Character> commonElements = findCommonElements(charArray, currentGroup[2].toCharArray());
+                Character commonElement = (Character) commonElements.toArray()[0];
 
                 int priority = findPriority(commonElement);
-                System.out.println(commonElement + " " + priority);
+                // System.out.println(commonElement + " " + priority);
                 totalPriority += priority;
             }
             lineCounter++;
@@ -79,18 +85,16 @@ public class Day3 {
         return null;
     }
 
-    private static Character[] findCommonElements(String first, String second) {
+    private static HashSet<Character> findCommonElements(char[] first, char[] second) {
         // int length = first.length();
-        ArrayList<Character> commonElements = new ArrayList<>();
-        for (char element1 : first.toCharArray()) {
-            for (char element2 : second.toCharArray()) {
+        HashSet<Character> commonElements = new HashSet<>();
+        for (char element1 : first) {
+            for (char element2 : second) {
                 if (element1 == element2) {
                     commonElements.add(element1);
                 }
             }
         }
-        Character[] commonElementsArray = new Character[commonElements.size()];
-        commonElements.toArray(commonElementsArray);
-        return commonElementsArray;
+        return commonElements;
     }
 }
