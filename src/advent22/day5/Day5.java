@@ -2,6 +2,7 @@ package day5;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
@@ -23,17 +24,18 @@ public class Day5 {
 
     public static void main(String args[]) {
         long startTime = System.nanoTime();
-        System.out.println("Top Elements " + getTopElements());
+        System.out.println("Top Elements Moved One By One: " + getTopElements(true));
+        System.out.println("Top Elements Moved All At Once: " + getTopElements(false));
         System.out.println("Running Time  " + (System.nanoTime() - startTime) / 1000);
     }
 
-    private static String getTopElements() {
+    private static String getTopElements(boolean moveOneByOne) {
         List<ArrayDeque<Character>> stacks = new ArrayList<ArrayDeque<Character>>();
         List<String> stackInputLines = new ArrayList<>();
         int totalStacks = 0;
         int lineCount = 0;
         Scanner sc = new Scanner(Day5.class.getResourceAsStream(inputFile));
-        //Get Lines with Initial Stack elements
+        // Get Lines with Initial Stack elements
         while (sc.hasNext()) {
             lineCount++;
             String currentLine = sc.nextLine();
@@ -50,7 +52,7 @@ public class Day5 {
             stacks.add(new ArrayDeque<Character>());
         }
 
-        //Build the initial state of the stacks
+        // Build the initial state of the stacks
         for (int i = stackInputLines.size() - 1; i >= 0; i--) { // iterate from the bottoms of the stacks
             String stackInputLine = stackInputLines.get(i);
             // every 4th char in a stack inputline is a elemenet
@@ -72,13 +74,25 @@ public class Day5 {
             int numElementsToMove = Integer.parseInt(instructions[1]);
             ArrayDeque<Character> fromStack = stacks.get(Integer.parseInt(instructions[3]) - 1);
             ArrayDeque<Character> toStack = stacks.get(Integer.parseInt(instructions[5]) - 1);
-            for (int i = 0; i < numElementsToMove; i++) {
-                toStack.push(fromStack.poll());
+            // Move 1 by one
+            if (moveOneByOne) {
+                for (int i = 0; i < numElementsToMove; i++) {
+                    toStack.push(fromStack.poll());
+                }
+            } else {
+                // Move all at once
+                Deque<Character> tempStack = new ArrayDeque<>();
+                for (int i = 0; i < numElementsToMove; i++) {
+                    tempStack.push(fromStack.poll());
+                }
+                for (Character element : tempStack) {
+                    toStack.push(element);
+                }
             }
         }
         sc.close();
 
-        //Get Top elements 
+        // Get Top elements
         List<Character> topElements = new ArrayList<>();
         for (ArrayDeque<Character> stack : stacks) {
             topElements.add(stack.peek());
