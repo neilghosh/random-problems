@@ -6,6 +6,7 @@ import java.util.Deque;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Day5 {
 
@@ -33,14 +34,12 @@ public class Day5 {
         List<ArrayDeque<Character>> stacks = new ArrayList<ArrayDeque<Character>>();
         List<String> stackInputLines = new ArrayList<>();
         int totalStacks = 0;
-        int lineCount = 0;
         Scanner sc = new Scanner(Day5.class.getResourceAsStream(inputFile));
         // Get Lines with Initial Stack elements
         while (sc.hasNext()) {
-            lineCount++;
             String currentLine = sc.nextLine();
             if (currentLine.isBlank()) {
-                String stackNumbersLine = stackInputLines.remove(lineCount - 2);
+                String stackNumbersLine = stackInputLines.remove(stackInputLines.size()-1);
                 totalStacks = stackNumbersLine.charAt(stackNumbersLine.length() - 2) - '0';
                 break;
             } else {
@@ -48,9 +47,7 @@ public class Day5 {
             }
         }
         // initialize stacks
-        for (int i = 0; i < totalStacks; i++) {
-            stacks.add(new ArrayDeque<Character>());
-        }
+        IntStream.range(0, totalStacks).forEach(i -> stacks.add(new ArrayDeque<Character>()));
 
         // Build the initial state of the stacks
         for (int i = stackInputLines.size() - 1; i >= 0; i--) { // iterate from the bottoms of the stacks
@@ -72,31 +69,23 @@ public class Day5 {
         while (sc.hasNext()) {
             String[] instructions = sc.nextLine().split(" ");
             int numElementsToMove = Integer.parseInt(instructions[1]);
-            ArrayDeque<Character> fromStack = stacks.get(Integer.parseInt(instructions[3]) - 1);
-            ArrayDeque<Character> toStack = stacks.get(Integer.parseInt(instructions[5]) - 1);
+            Deque<Character> fromStack = stacks.get(Integer.parseInt(instructions[3]) - 1); // Index by 0
+            Deque<Character> toStack = stacks.get(Integer.parseInt(instructions[5]) - 1);
             // Move 1 by one
             if (moveOneByOne) {
-                for (int i = 0; i < numElementsToMove; i++) {
-                    toStack.push(fromStack.poll());
-                }
+                IntStream.range(0, numElementsToMove).forEach(i -> toStack.push(fromStack.poll()));
             } else {
                 // Move all at once
                 Deque<Character> tempStack = new ArrayDeque<>();
-                for (int i = 0; i < numElementsToMove; i++) {
-                    tempStack.push(fromStack.poll());
-                }
-                for (Character element : tempStack) {
-                    toStack.push(element);
-                }
+                IntStream.range(0, numElementsToMove).forEach(i -> tempStack.push(fromStack.poll()));
+                tempStack.forEach(element -> toStack.push(element));
             }
         }
         sc.close();
 
         // Get Top elements
         List<Character> topElements = new ArrayList<>();
-        for (ArrayDeque<Character> stack : stacks) {
-            topElements.add(stack.peek());
-        }
+        stacks.forEach(stack ->topElements.add(stack.peek()));
         return topElements.stream().map(s -> s.toString()).collect(Collectors.joining());
     }
 }
