@@ -39,7 +39,7 @@ public class Day5 {
         while (sc.hasNext()) {
             String currentLine = sc.nextLine();
             if (currentLine.isBlank()) {
-                String stackNumbersLine = stackInputLines.remove(stackInputLines.size()-1);
+                String stackNumbersLine = stackInputLines.remove(stackInputLines.size() - 1);
                 totalStacks = stackNumbersLine.charAt(stackNumbersLine.length() - 2) - '0';
                 break;
             } else {
@@ -85,7 +85,7 @@ public class Day5 {
 
         // Get Top elements
         List<Character> topElements = new ArrayList<>();
-        stacks.forEach(stack ->topElements.add(stack.peek()));
+        stacks.forEach(stack -> topElements.add(stack.peek()));
         return topElements.stream().map(s -> s.toString()).collect(Collectors.joining());
     }
 }
