@@ -55,11 +55,9 @@ public class Day5 {
             // every 4th char in a stack inputline is a elemenet
             int elementCount = 0;
             for (char element : stackInputLine.toCharArray()) {
-                if (elementCount % 4 == 1) {
-                    if (element != ' ') {
-                        ArrayDeque<Character> stack = stacks.get(elementCount / 4);
-                        stack.push(element);
-                    }
+                if (elementCount % 4 == 1 && element != ' ') {
+                    ArrayDeque<Character> stack = stacks.get(elementCount / 4);
+                    stack.push(element);
                 }
                 elementCount++;
             }
@@ -83,9 +81,7 @@ public class Day5 {
         }
         sc.close();
 
-        // Get Top elements
-        List<Character> topElements = new ArrayList<>();
-        stacks.forEach(stack -> topElements.add(stack.peek()));
-        return topElements.stream().map(s -> s.toString()).collect(Collectors.joining());
+        // Return top elements of all stacks concatenated
+        return stacks.stream().map(stack -> stack.peek().toString()).collect(Collectors.joining());
     }
 }
